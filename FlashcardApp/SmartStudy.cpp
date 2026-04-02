@@ -1,11 +1,13 @@
 /*Basic flashcard app for Portuguese beginners 
 Author :Talent Yolanda Ndlovu
 Date: 13/09/2024*/
+
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>// used for memory allocation
 #include <cctype> //used to check individual characters
 #include<cstdlib>
+#include <ctype.h>
 using namespace std;
 
 
@@ -21,6 +23,7 @@ class Subjects{
             answer=a;
             id=rand()% 100;
             string line;
+
             line=question +"*"+answer+"|"+to_string(id);  //adding the identifier number of the flashcard, * is a separator between question and answer, | is separator between answer and id
             return line;
         }
@@ -31,6 +34,7 @@ class Subjects{
         string quest_view="";
         string correct_ans="";
         string user_answer="";
+
         bool same;
         int ans_start;
         enum Status 
@@ -45,7 +49,7 @@ class Subjects{
         cout<<"Question: ";
         for(int i=0;i<=readline.length()+1;i++)
         {
-            while (current==QUESTION)
+            if (current==QUESTION)
             {
                 if (readline[i]!='*')
                 {
@@ -56,7 +60,7 @@ class Subjects{
                     current=ANSWER;
                 }
             }
-            while (current==ANSWER)
+            if (current==ANSWER)
             {
                 if(readline[i]!='|')
                 {
@@ -70,7 +74,7 @@ class Subjects{
                     current=ID;
                 }
             }
-            while (current==ID)
+            if (current==ID)
             {
                 if(readline[i]!='\n')
                 {
@@ -78,9 +82,22 @@ class Subjects{
                 }
             }
         }
+        //getline(cin,user_answer);
+        //fflush(stdout);
         cout<<quest_view<<endl;
+        getline(cin>>ws,user_answer);
 
     //for compare() 0 is true and 1 is false
+        for(char& x:user_answer)
+        {
+            x=tolower(x);
+        }
+
+        for(char& y:correct_ans)
+            {
+                y=tolower(y);
+            }
+
         same=user_answer.compare(correct_ans);
 
         if (same==0){
@@ -156,50 +173,33 @@ int main(){
         else
         {
             cout<<"File created successfully"<<endl;
+            system("clear");
+
             cout<<"Time to add more flashcards!!\n"; 
             cout<<"How many flashcards would you like to add?"<<endl;
             cin>>QuesNum;
             system("clear");
-            getline(cin,q1);
+            //getline(cin,q1);
             for(int i=1; i<=QuesNum;i++)
             {
                 cout<<"Input question\n"; 
                 //in c++ as soon as a whitespace is encountered, our input is terminated therefore we must use getline
-                getline(cin,q1);
+                getline(cin>>ws,q1); //this fixed the errors pertaining to reading to and from files, because cin doesnt read whitespaces and getline has an obsession with whitelines, so checking for next line and whatever w can be weird. 
                 cout<<"Input answer"<<endl;
                 getline(cin,a1);
                 MyFile<<Science1.add(q1,a1)<<"\n";
                 system("clear");
             }
         }
+        MyFile.close();
     }
-    
-
-    
-    if(user_response=='Y')
-    {
-        cout<<"Time to add more flashcards!!\n"; 
-        cout<<"How many flashcards would you like to add?"<<endl;
-        cin>>QuesNum;
-        system("clear");
-        getline(cin,q1);
-        for(int i=1; i<=QuesNum;i++)
-        {
-            cout<<"Input question\n"; 
-            //in c++ as soon as a whitespace is encountered, our input is terminated therefore we must use getline
-            getline(cin,q1);
-            cout<<"Input answer"<<endl;
-            getline(cin,a1);
-            MyFile<<Science1.add(q1,a1)<<"\n";
-            system("clear");
-        }
-    }
-    MyFile.close();
-
+   
     cout<<"Would you like to revise your flashcards? Y or N";
     cin>>user_response;
+    
 
     MyReadFile.open("/Users/talentyolandandlovu/Cpp projects/Cpp/"+file_to_open);
+    
     if (user_response=='Y')
     {
         if (!MyReadFile.is_open())
