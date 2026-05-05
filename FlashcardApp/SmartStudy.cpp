@@ -7,7 +7,7 @@ Date: 13/09/2024*/
 #include <stdlib.h>// used for memory allocation
 #include <cctype> //used to check individual characters
 #include<cstdlib>
-#include <ctype.h>
+#include <ctype.h>//for clasifying and modifying characters
 using namespace std;
 
 
